@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
 
     public static PlayerMovement player;
+    private PlayerAttack attackType; //if attack is none can move else stop movement to attack
 
     public int maxHealth = 16;
     public int health;
@@ -24,7 +25,6 @@ public class PlayerMovement : MonoBehaviour
     private bool invincible;
     public bool isTouchingGround;
 
-    private PlayerAttack playerAttack;
 
     public bool jumping;
     public bool running;
@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerAttack = GetComponent<PlayerAttack>();
+        attackType = GetComponent<PlayerAttack>();
         jumping = false;
         running = false;
         walking = false;
@@ -70,14 +70,15 @@ public class PlayerMovement : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-
-        Movement();
+        if (attackType.GetAttackType() == AttackTypes.None) {
+            Movement();      
+        }
         
     }
 
     private void Movement() {
         Vector2 vel;
-        if (!playerAnim.GetBool("CrouchJump")) {
+        if (!playerAnim.GetBool("CrouchJump") && attackType.GetAttackType() == AttackTypes.None) {
 
             if (Input.GetButton("Run")) {
                 deltaX = Input.GetAxis("Horizontal") * runSpeed;
@@ -88,13 +89,13 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-        else{
+        else {
             deltaX = Input.GetAxis("Horizontal");
             deltaY = 0;
         }
 
-        //check velocity to change animations
-        if (!playerAnim.GetBool("CrouchJump")) {
+        //IF not on "crocuh jump" state and is not attacking THEN player can move
+        if (!playerAnim.GetBool("CrouchJump") && attackType.GetAttackType() == AttackTypes.None) {
             //set the speed value of the animator so that it can change aniamtions
             playerAnim.SetFloat("SpeedX",Mathf.Abs(deltaX));
             //Jump if on Ground
@@ -127,7 +128,6 @@ public class PlayerMovement : MonoBehaviour
 
             ChangeDirection(deltaX);
         }
-
         vel = new Vector2(deltaX, deltaY);
         rigidbody.velocity = vel;
 
@@ -165,6 +165,7 @@ public class PlayerMovement : MonoBehaviour
 
         playerAnim.SetBool("CrouchJump", false);
         isTouchingGround = true;
+
     }
 
 

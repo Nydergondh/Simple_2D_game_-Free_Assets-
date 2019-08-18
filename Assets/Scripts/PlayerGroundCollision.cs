@@ -18,7 +18,6 @@ public class PlayerGroundCollision : MonoBehaviour
         if (feetCollider.IsTouchingLayers(groundLayer) && PlayerMovement.player.jumping) {
             PlayerMovement.player.CrouchAfterJump();
             PlayerMovement.player.isTouchingGround = true;
-            print("called");
         }
         //if is not jumping, but is falling and touch the ground
         else if (feetCollider.IsTouchingLayers(groundLayer) && !PlayerMovement.player.jumping) {
@@ -26,7 +25,6 @@ public class PlayerGroundCollision : MonoBehaviour
                 PlayerMovement.player.CrouchAfterJump();
             }
             PlayerMovement.player.isTouchingGround = true;
-            print("called1");
         }
     }
 
@@ -34,7 +32,6 @@ public class PlayerGroundCollision : MonoBehaviour
         if (collision.gameObject.layer == 8) {
             if (!feetCollider.IsTouchingLayers(groundLayer)) {
                 PlayerMovement.player.Fall();
-                print("called2");
             }
         }
     }
